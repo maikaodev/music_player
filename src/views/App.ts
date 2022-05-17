@@ -1,12 +1,7 @@
 import { html } from '~/utils';
-import { Header } from './Header';
+import { Container } from './Container';
 import './App.css';
 
 export function App() {
-  return html`
-    <div class="App">
-      ${Header()}
-      <p>Render you app here...</p>
-    </div>
-  `;
+  return html` <div class="App">${Container()}</div> `;
 }

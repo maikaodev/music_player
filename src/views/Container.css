@@ -1,0 +1,81 @@
+
+*{
+  margin: 0;
+  padding: 0;
+  border: none;
+  box-sizing: border-box;
+  list-style: none;
+}
+.container{
+  background-color:#E5E5E5;
+  
+  width: 375px;
+  height:100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  margin: 0 auto;
+}
+main{
+  padding: 12px;
+}
+.albums{
+  background-color: #ffffff;
+
+  border: 1px solid rgba(0, 0, 0, 0.25);
+                  
+  border-radius: 4px;
+}
+.albums:nth-child(1){
+  margin-bottom: 16px;
+}
+.header{
+  display: flex;
+  padding: 16px;
+}
+.description{
+  margin-left: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.description h2{
+  font-size: 28px;
+}
+.description p{
+  color: rgba(0, 0, 0, 0.45);
+  font-style: italic;
+  font-size: 18px;
+}
+.list{
+  padding: 16px;
+}
+.list li{
+  padding: 8px;
+  color: rgba(0, 0, 0, 0.65);
+}
+.selected{
+  background: rgba(0, 0, 0, 0.15);
+}
+.controller{
+  background-color: #ffffff;
+  border-top: 2px solid rgba(0, 0, 0, 0.25);
+
+
+}
+.controller .list{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0px;
+}
+.controller .list li button {
+  background-color: #ffffff;
+}
+.controller .list li button img{
+  width: 58px;
+}
+#play img{
+  width: 115px;
+}
