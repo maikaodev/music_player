@@ -1,8 +1,55 @@
 import { html, mounted } from '~/utils';
 import './Container.css';
+import { Player } from '~/models/Player';
+import albums from '~/mocks/albums.json';
 
 export function Container() {
-  mounted(function () {});
+  mounted(function () {
+    const audioElement = document.querySelector('#audio');
+    const playElement = document.querySelector('#play');
+    const previousElement = document.querySelector('#previous');
+    const nextElement = document.querySelector('#next');
+
+    const $player = new Player();
+
+    function setAlbum() {
+      $player.playlist.addAlbum(albums[$player._albumIndex]);
+    }
+    setAlbum();
+
+    playElement?.addEventListener('click', () => {
+      setAlbum();
+      if ($player.playing) {
+        $player.pause();
+        audioElement.pause();
+      } else {
+        $player.play();
+        setSong();
+      }
+    });
+    previousElement.addEventListener('click', () => {
+      $player.prevTrack();
+      if ($player._albumIndex) {
+        setAlbum();
+      }
+      $player.play();
+      setSong();
+    });
+
+    nextElement.addEventListener('click', () => {
+      $player.nextTrack();
+      if ($player._albumIndex) {
+        setAlbum();
+      }
+      $player.play();
+      setSong();
+    });
+
+    function setSong() {
+      audioElement.src = $player.trackUrl;
+      audioElement.play();
+    }
+  });
 
   return html` <div class="container">
     <main>
@@ -53,8 +100,9 @@ export function Container() {
     </main>
     <footer>
       <section class="controller">
+        <audio src="" id="audio"></audio>
         <ul class="list">
-          <li>
+          <li id="previous">
             <button>
               <img src="./img/prev.svg" alt="Previous" />
             </button>
@@ -64,7 +112,7 @@ export function Container() {
               <img src="./img/play.svg" alt="Play/Pause" />
             </button>
           </li>
-          <li>
+          <li id="next">
             <button>
               <img src="./img/next.svg" alt="Next" />
             </button>
