@@ -10,7 +10,7 @@ export class Album implements AlbumType {
   title: string;
   tracks: TrackData[];
   getUrlFromIndex(index: number): string | null {
-    if (index === 0 && index < this.tracks.length - 1) {
+    if (index === 0 || index <= this.tracks.length - 1) {
       return this.tracks[index].url;
     } else {
       return null;

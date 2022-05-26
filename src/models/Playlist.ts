@@ -1,4 +1,6 @@
 import { Album } from './Album';
+import albums from '~/mocks/albums.json';
+
 export class Playlist implements PlaylistType {
   albums: AlbumType[] = [];
   addAlbum(data: AlbumData) {
@@ -13,7 +15,7 @@ export class Playlist implements PlaylistType {
     }
   }
   isLastAlbum(index: number): boolean {
-    if (index === this.albums.length - 1) {
+    if (index === albums.length - 1) {
       return true;
     } else {
       return false;

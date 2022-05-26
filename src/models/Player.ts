@@ -1,4 +1,6 @@
 import { Playlist } from './Playlist';
+import albums from '~/mocks/albums.json';
+
 export class Player implements PlayerType {
   album: AlbumType | null = null;
   playing: boolean = false;
@@ -6,52 +8,65 @@ export class Player implements PlayerType {
   trackUrl: string | null = null;
   _albumIndex: number = 0;
   _trackIndex: number = 0;
-  set albumIndex(value: number) {
-    if (value > 0 && value <= this.playlist.albums.length - 1) {
-      this._albumIndex = value;
-    } else {
-      this._albumIndex = 0;
-      this._trackIndex = 0;
-    }
-  }
   get albumIndex() {
     return this._albumIndex;
   }
-  set trackIndex(value: number) {
-    if (value <= this.playlist.albums[this.albumIndex].tracks.length - 1) {
-      this._trackIndex = value;
+  set albumIndex(value) {
+    if (value <= albums.length - 1) {
+      this._albumIndex = value;
+    } else {
+      return;
     }
   }
   get trackIndex() {
     return this._trackIndex;
   }
+  set trackIndex(value) {
+    if (value <= this.playlist.albums[this._albumIndex].tracks.length - 1) {
+      this._trackIndex = value;
+    } else {
+      return;
+    }
+  }
   play(): void {
     this.playing = true;
-    this.album = this.playlist.albums[this.albumIndex];
-    this.trackUrl = this.album.tracks[this.trackIndex].url;
+    this.album = this.playlist.albums[this._albumIndex];
+    this.trackUrl = this.playlist.albums[this._albumIndex].getUrlFromIndex(
+      this._trackIndex
+    );
   }
   pause(): void {
     this.playing = false;
   }
   nextTrack(): void {
-    this.trackIndex++;
-    if (
-      this.trackIndex ===
-      this.playlist.albums[this.albumIndex].tracks.length - 1
+    if (!this.playlist.albums[this._albumIndex].isLastTrack(this._trackIndex)) {
+      this._trackIndex++;
+    } else if (
+      this.playlist.albums[this._albumIndex].isLastTrack(this._trackIndex) &&
+      this.playlist.isLastAlbum(this._albumIndex)
     ) {
-      this.albumIndex++;
-      this.trackIndex = 0;
+      this._albumIndex = 0;
+      this._trackIndex = 0;
+    } else {
+      this._albumIndex++;
+      this._trackIndex = 0;
     }
   }
   prevTrack(): void {
-    if (this.trackIndex > 0) {
-      this.trackIndex--;
-    } else if (this.albumIndex > 0) {
-      this.albumIndex--;
-      this.trackIndex = this.playlist.albums[this.albumIndex].tracks.length - 1;
-    } else {
-      this.albumIndex = this.playlist.albums.length - 1;
-      this.trackIndex = this.playlist.albums[this.albumIndex].tracks.length - 1;
+    if (
+      !this.playlist.albums[this._albumIndex].isFirstTrack(this._trackIndex)
+    ) {
+      this._trackIndex--;
+    } else if (!this.playlist.isFirstAlbum(this._albumIndex)) {
+      this._albumIndex--;
+      this._trackIndex =
+        this.playlist.albums[this._albumIndex].tracks.length - 1;
+    } else if (
+      this.playlist.isFirstAlbum(this._albumIndex) &&
+      this.playlist.albums[this._albumIndex].isFirstTrack(this.trackIndex)
+    ) {
+      this._albumIndex = albums.length - 1;
+      this._trackIndex = albums[this._albumIndex].tracks.length - 1;
     }
   }
 }
