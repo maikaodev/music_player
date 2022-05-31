@@ -9,8 +9,14 @@ export function Container() {
     const playElement = document.querySelector('#play');
     const previousElement = document.querySelector('#previous');
     const nextElement = document.querySelector('#next');
+    const mute = document.querySelector('#mute');
+    const volumeControll = document.querySelector('#vol-control');
+    const seekbar = document.querySelector('#seekbar');
+    const currentDurantion = document.querySelector('#currentDurantion');
+    const totalDurantion = document.querySelector('#totalDurantion');
 
     const $player = new Player();
+    let validation = 0;
 
     function setAlbum() {
       $player.playlist.addAlbum(albums[$player._albumIndex]);
@@ -18,14 +24,17 @@ export function Container() {
     setAlbum();
 
     playElement?.addEventListener('click', () => {
-      setAlbum();
       if ($player.playing) {
         $player.pause();
         audioElement.pause();
       } else {
         $player.play();
+        audioElement.play();
+      }
+      if (validation === 0) {
         setSong();
       }
+      validation++;
     });
     previousElement.addEventListener('click', () => {
       $player.prevTrack();
@@ -37,18 +46,70 @@ export function Container() {
     });
 
     nextElement.addEventListener('click', () => {
+      nextTrack();
+    });
+    function nextTrack() {
       $player.nextTrack();
       if ($player._albumIndex) {
         setAlbum();
       }
       $player.play();
       setSong();
-    });
-
+    }
     function setSong() {
       audioElement.src = $player.trackUrl;
       audioElement.play();
+      audioElement.onloadeddata = () => {
+        seekbar.max = audioElement.duration;
+        totalDurantion.innerHTML = secondesToMinutes(audioElement.duration);
+      };
     }
+    mute.addEventListener('click', () => {
+      audioElement.muted = !audioElement.muted;
+
+      mute.src = audioElement.muted
+        ? './img/volume-mute.svg'
+        : './img/volume-up.svg';
+    });
+
+    function setVolume(value) {
+      audioElement.volume = value / 100;
+      if (audioElement.volume === 0) {
+        mute.src = './img/volume-mute.svg';
+      } else {
+        mute.src = './img/volume-up.svg';
+      }
+    }
+    volumeControll.addEventListener('change', () => {
+      setVolume(volumeControll.value);
+    });
+    volumeControll.addEventListener('input', () => {
+      setVolume(volumeControll.value);
+    });
+    function setSeek(value) {
+      audioElement.currentTime = value;
+    }
+    seekbar.addEventListener('change', () => {
+      setSeek(seekbar.value);
+    });
+    seekbar.addEventListener('input', () => {
+      setSeek(seekbar.value);
+    });
+    function secondesToMinutes(time) {
+      const minutes = Math.floor(time / 60);
+      const secondes = Math.floor(time % 60);
+      return `${('0' + minutes).slice(-2)}:${('0' + secondes).slice(-2)}`;
+    }
+    function timeupdate() {
+      currentDurantion.innerHTML = secondesToMinutes(audioElement.currentTime);
+      seekbar.value = audioElement.currentTime;
+    }
+    audioElement.addEventListener('timeupdate', () => {
+      timeupdate();
+    });
+    audioElement.addEventListener('ended', () => {
+      nextTrack();
+    });
   });
 
   return html` <div class="container">
@@ -100,24 +161,38 @@ export function Container() {
     </main>
     <footer>
       <section class="controller">
+        <div id="audioTime">
+          <div id="currentDurantion">00:00</div>
+          <input type="range" min="0" max="0" id="seekbar" step="1" />
+          <div id="totalDurantion">00:00</div>
+          <div id="volume">
+            <img src="./img/volume-up.svg" alt="Volume UP" id="mute" />
+
+            <input type="range" min="0" max="100" id="vol-control" step="1" />
+          </div>
+        </div>
+
         <audio src="" id="audio"></audio>
-        <ul class="list">
-          <li id="previous">
-            <button>
-              <img src="./img/prev.svg" alt="Previous" />
-            </button>
-          </li>
-          <li id="play">
-            <button>
-              <img src="./img/play.svg" alt="Play/Pause" />
-            </button>
-          </li>
-          <li id="next">
-            <button>
-              <img src="./img/next.svg" alt="Next" />
-            </button>
-          </li>
-        </ul>
+
+        <div>
+          <ul class="list">
+            <li id="previous">
+              <button>
+                <img src="./img/prev.svg" alt="Previous" />
+              </button>
+            </li>
+            <li id="play">
+              <button>
+                <img src="./img/play.svg" alt="Play/Pause" />
+              </button>
+            </li>
+            <li id="next">
+              <button>
+                <img src="./img/next.svg" alt="Next" />
+              </button>
+            </li>
+          </ul>
+        </div>
       </section>
     </footer>
   </div>`;

@@ -58,17 +58,32 @@ main{
 .selected{
   background: rgba(0, 0, 0, 0.15);
 }
+#volume, #audioTime{
+  display: flex;
+}
+#audioTime{
+  justify-content:space-around;
+}
+#audioTime, #volume{
+  align-items: center;
+}
+#volume img{
+  width: 24px;
+  height: 24px;
+}
+#volume input{
+  width: 100px;
+}
 .controller{
   background-color: #ffffff;
   border-top: 2px solid rgba(0, 0, 0, 0.25);
-
-
+  padding: 8px;
 }
 .controller .list{
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 0px;
+  padding: 0px;
 }
 .controller .list li button {
   background-color: #ffffff;
