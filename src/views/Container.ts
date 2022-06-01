@@ -1,6 +1,6 @@
 import { html } from '~/utils';
 import './Container.css';
-import { Controllers } from './Controllers';
+import { Controllers } from './ControllersAudio/Controllers';
 import { MusicList } from './MusicList';
 
 export function Container() {
