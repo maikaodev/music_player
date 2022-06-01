@@ -31,9 +31,7 @@ export class Player implements PlayerType {
   play(): void {
     this.playing = true;
     this.album = this.playlist.albums[this._albumIndex];
-    this.trackUrl = this.playlist.albums[this._albumIndex].getUrlFromIndex(
-      this._trackIndex
-    );
+    this.trackUrl = this.album.getUrlFromIndex(this._trackIndex);
   }
   pause(): void {
     this.playing = false;
