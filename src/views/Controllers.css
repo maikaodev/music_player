@@ -1,0 +1,37 @@
+
+#volume, #audioTime{
+  display: flex;
+}
+#audioTime{
+  justify-content:space-around;
+}
+#audioTime, #volume{
+  align-items: center;
+}
+#volume img{
+  width: 24px;
+  height: 24px;
+}
+#volume input{
+  width: 100px;
+}
+.controller{
+  background-color: #ffffff;
+  border-top: 2px solid rgba(0, 0, 0, 0.25);
+  padding: 8px;
+}
+.controller .list{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px;
+}
+.controller .list li button {
+  background-color: #ffffff;
+}
+.controller .list li button img{
+  width: 58px;
+}
+#play img{
+  width: 115px;
+}
