@@ -1,24 +1,31 @@
-import { html, mounted, secondesToMinutes } from '~/utils';
-import { ControllTimeVolume } from './ControllTimeVolume';
+import { html, mounted } from '~/utils';
+import { ControlTimeHTML, $ControlTime } from './ControlTime';
 import './Controllers.css';
 import { Player } from '~/models/Player';
 import albums from '~/mocks/albums.json';
 
 export function Controllers() {
   mounted(function () {
+    // PICKING UP ELEMENTS
+
     const audioElement = document.querySelector<HTMLAudioElement>('#audio')!;
     const playElement = document.querySelector('#play')!;
     const previousElement = document.querySelector('#previous')!;
     const nextElement = document.querySelector('#next')!;
     const seekbar = document.querySelector<HTMLInputElement>('#seekbar')!;
-    const totalDurantion = document.querySelector('#totalDurantion')!;
+
+    // PASSING THE PARAMETERS TO THE CHILD COMPONENT
+    $ControlTime(audioElement, seekbar);
 
     const $player = new Player();
+
     albums.forEach((album) => {
       $player.playlist.addAlbum(album);
     });
 
     let validation = 0;
+
+    // FUNCTIONS
 
     playElement.addEventListener('click', () => {
       if ($player.playing) {
@@ -33,19 +40,23 @@ export function Controllers() {
       }
       validation++;
     });
+
     previousElement.addEventListener('click', () => {
       $player.prevTrack();
       $player.play();
       setSong();
+      audioElement.play();
     });
 
     nextElement.addEventListener('click', () => {
       nextTrack();
     });
+
     function nextTrack() {
       $player.nextTrack();
       $player.play();
       setSong();
+      audioElement.play();
     }
 
     function setSong() {
@@ -54,22 +65,15 @@ export function Controllers() {
         return;
       }
       audioElement.src = $player.trackUrl;
-      audioElement.play();
-
-      audioElement.onloadeddata = () => {
-        seekbar.max = audioElement.duration.toString();
-        totalDurantion.innerHTML = secondesToMinutes(audioElement.duration);
-      };
-
-      audioElement.addEventListener('ended', () => {
-        nextTrack();
-      });
     }
+
+    audioElement.addEventListener('ended', () => {
+      nextTrack();
+    });
   });
 
   return html`<section class="controller">
-    ${ControllTimeVolume()}
-
+    ${ControlTimeHTML()}
     <audio src="" id="audio"></audio>
 
     <div>
@@ -81,7 +85,7 @@ export function Controllers() {
         </li>
         <li id="play">
           <button>
-            <img src="./img/play.svg" alt="Play/Pause" />
+            <img src="./img/play.svg" alt="Play/Pause" id="playPause" />
           </button>
         </li>
         <li id="next">
