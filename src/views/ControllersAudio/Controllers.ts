@@ -4,7 +4,9 @@ import './Controllers.css';
 import { Player } from '~/models/Player';
 import albums from '~/mocks/albums.json';
 
-export function Controllers() {
+export { ControllersHTML, $Controllers };
+
+function $Controllers() {
   mounted(function () {
     // PICKING UP ELEMENTS
 
@@ -24,7 +26,9 @@ export function Controllers() {
     });
 
     let validation = 0;
-
+    let currentElement;
+    let element: HTMLElement;
+    let itemAdded = false;
     // FUNCTIONS
 
     playElement.addEventListener('click', () => {
@@ -65,13 +69,34 @@ export function Controllers() {
         return;
       }
       audioElement.src = $player.trackUrl;
+
+      if (itemAdded) {
+        removeClassSelected();
+      }
+
+      setClassSelected(
+        $player._albumIndex.toString(),
+        $player._trackIndex.toString()
+      );
     }
 
     audioElement.addEventListener('ended', () => {
       nextTrack();
     });
-  });
 
+    function setClassSelected(albumIndex: string, trackIndex: string) {
+      currentElement = document.getElementById(`${albumIndex}${trackIndex}`)!;
+      currentElement.classList.add('selected');
+      element = currentElement;
+      itemAdded = true;
+    }
+    function removeClassSelected() {
+      element = document.querySelector('.selected')!;
+      element.classList.remove('selected');
+    }
+  });
+}
+function ControllersHTML() {
   return html`<section class="controller">
     ${ControlTimeHTML()}
     <audio src="" id="audio"></audio>

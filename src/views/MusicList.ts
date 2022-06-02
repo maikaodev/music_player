@@ -3,6 +3,7 @@ import './MusicList.css';
 
 import { Player } from '~/models/Player';
 import albums from '~/mocks/albums.json';
+import { ControllersHTML, $Controllers } from './ControllersAudio/Controllers';
 
 export function MusicList() {
   mounted(function () {
@@ -28,7 +29,12 @@ export function MusicList() {
     function setAlbumToCreate() {
       while ($player._albumIndex <= albums.length - 1) {
         $albums[$player._albumIndex].tracks.forEach((album, index) => {
-          createListMusics(getUL[$player._albumIndex].UL, album.title, index);
+          createListMusics(
+            getUL[$player._albumIndex].UL,
+            album.title,
+            index,
+            $player._albumIndex
+          );
         });
         $player._albumIndex++;
       }
@@ -37,13 +43,16 @@ export function MusicList() {
     function createListMusics(
       list: HTMLDListElement,
       title: string,
-      index: number
+      index: number,
+      albumIndex: number
     ) {
       const newItem = document.createElement('li');
       const content = document.createTextNode(`0${index + 1} - ${title}`);
+      newItem.setAttribute('id', `${albumIndex}${index}`);
       newItem.appendChild(content);
       list.appendChild(newItem);
     }
+    $Controllers();
   });
 
   return html`
@@ -78,5 +87,6 @@ export function MusicList() {
       <ul class="list" id="listPrelude"></ul>
     </section>
     <!-- end second album -->
+    <footer>${ControllersHTML()}</footer>
   `;
 }
