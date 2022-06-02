@@ -1,7 +1,9 @@
 
 main{
   padding: 12px;
+  
 }
+
 .albums{
   background-color: #ffffff;
 
@@ -9,7 +11,7 @@ main{
                   
   border-radius: 4px;
 }
-.albums:nth-child(1){
+.albums{
   margin-bottom: 16px;
 }
 .header{

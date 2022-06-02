@@ -4,12 +4,9 @@ import './Controllers.css';
 import { Player } from '~/models/Player';
 import albums from '~/mocks/albums.json';
 
-export { ControllersHTML, $Controllers };
-
-function $Controllers() {
+export function Controllers() {
   mounted(function () {
     // PICKING UP ELEMENTS
-
     const audioElement = document.querySelector<HTMLAudioElement>('#audio')!;
     const playElement = document.querySelector('#play')!;
     const previousElement = document.querySelector('#previous')!;
@@ -79,11 +76,7 @@ function $Controllers() {
         $player._trackIndex.toString()
       );
     }
-    //testando
-    //testando
-    //testando
-    //testando
-    //testando
+
     audioElement.addEventListener('ended', () => {
       nextTrack();
     });
@@ -99,8 +92,6 @@ function $Controllers() {
       element.classList.remove('selected');
     }
   });
-}
-function ControllersHTML() {
   return html`<section class="controller">
     ${ControlTimeHTML()}
     <audio src="" id="audio"></audio>

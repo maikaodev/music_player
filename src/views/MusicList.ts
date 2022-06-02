@@ -3,7 +3,6 @@ import './MusicList.css';
 
 import { Player } from '~/models/Player';
 import albums from '~/mocks/albums.json';
-import { ControllersHTML, $Controllers } from './ControllersAudio/Controllers';
 
 export function MusicList() {
   mounted(function () {
@@ -52,7 +51,6 @@ export function MusicList() {
       newItem.appendChild(content);
       list.appendChild(newItem);
     }
-    $Controllers();
   });
 
   return html`
@@ -87,6 +85,5 @@ export function MusicList() {
       <ul class="list" id="listPrelude"></ul>
     </section>
     <!-- end second album -->
-    <footer>${ControllersHTML()}</footer>
   `;
 }
