@@ -1,15 +1,57 @@
 import { html, mounted } from '~/utils';
 import './MusicList.css';
 
+import { Player } from '~/models/Player';
+import albums from '~/mocks/albums.json';
+
 export function MusicList() {
-  mounted(function () {});
+  mounted(function () {
+    const getUL = [
+      {
+        UL: document.querySelector<HTMLDListElement>('#listBeethoven')!,
+      },
+      {
+        UL: document.querySelector<HTMLDListElement>('#listPrelude')!,
+      },
+    ];
+
+    const $player = new Player();
+
+    albums.forEach((album) => {
+      $player.playlist.addAlbum(album);
+    });
+
+    let $albums = $player.playlist.albums;
+
+    setAlbumToCreate();
+
+    function setAlbumToCreate() {
+      while ($player._albumIndex <= albums.length - 1) {
+        $albums[$player._albumIndex].tracks.forEach((album, index) => {
+          createListMusics(getUL[$player._albumIndex].UL, album.title, index);
+        });
+        $player._albumIndex++;
+      }
+    }
+
+    function createListMusics(
+      list: HTMLDListElement,
+      title: string,
+      index: number
+    ) {
+      const newItem = document.createElement('li');
+      const content = document.createTextNode(`0${index + 1} - ${title}`);
+      newItem.appendChild(content);
+      list.appendChild(newItem);
+    }
+  });
 
   return html`
     <!-- first album -->
     <section class="albums">
       <!-- header -->
       <div class="header">
-        <img src="./img/beethoven.png" alt="Beethoven" />
+        <img src="./img/beethoven.png" alt="Beethoven" id="img" />
         <div class="description">
           <h2>Symphony Collection</h2>
           <p>Ludwig van Beethoven</p>
@@ -17,16 +59,7 @@ export function MusicList() {
       </div>
       <!--end header -->
 
-      <ul class="list">
-        <li class="selected">
-          01. Symphony no. 1 in C, Op. 21 - I. Adagio molto - Allegro con brio
-        </li>
-        <li>
-          02. Symphony No. 3 in E Flat Major Eroica, Op. 55 - II. Marcia funebre
-          Adagio assai
-        </li>
-        <li>03. Symphony no. 4 in Bb, Op. 60 - IV. Allegro ma non troppo</li>
-      </ul>
+      <ul class="list" id="listBeethoven"></ul>
     </section>
     <!-- end first album -->
     <!-- second album -->
@@ -42,11 +75,7 @@ export function MusicList() {
       </div>
       <!--end header -->
 
-      <ul class="list">
-        <li>01. Preludes, Op. 28 - Nos. 4 ,5, 6</li>
-        <li>02. Preludes, Op. 28 - Nos. 20, 21</li>
-        <li>03. Preludes, Op. 28 - No. 15</li>
-      </ul>
+      <ul class="list" id="listPrelude"></ul>
     </section>
     <!-- end second album -->
   `;
