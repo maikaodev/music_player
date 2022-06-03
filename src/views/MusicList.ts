@@ -1,4 +1,4 @@
-import { html, mounted } from '~/utils';
+import { mounted } from '~/utils';
 import './MusicList.css';
 
 import { Player } from '~/models/Player';
@@ -6,15 +6,6 @@ import albums from '~/mocks/albums.json';
 
 export function MusicList() {
   mounted(function () {
-    const getUL = [
-      {
-        UL: document.querySelector<HTMLDListElement>('#listBeethoven')!,
-      },
-      {
-        UL: document.querySelector<HTMLDListElement>('#listPrelude')!,
-      },
-    ];
-
     const $player = new Player();
 
     albums.forEach((album) => {
@@ -27,63 +18,78 @@ export function MusicList() {
 
     function setAlbumToCreate() {
       while ($player._albumIndex <= albums.length - 1) {
-        $albums[$player._albumIndex].tracks.forEach((album, index) => {
-          createListMusics(
-            getUL[$player._albumIndex].UL,
-            album.title,
-            index,
-            $player._albumIndex
-          );
+        createMainContent(
+          $albums[$player._albumIndex].title,
+          $albums[$player._albumIndex].artist,
+          $albums[$player._albumIndex].cover,
+          $player._albumIndex.toString()
+        );
+
+        $albums[$player._albumIndex].tracks.forEach((track, index) => {
+          createListMusics(track.title, index, $player._albumIndex);
         });
         $player._albumIndex++;
       }
     }
+    function createMainContent(
+      titleH2: string,
+      artist: string,
+      cover: string,
+      albumIndex: string
+    ) {
+      const main = document.querySelector('main')!;
+      const newSection = document.createElement('section');
+      newSection.classList.add('albums');
+      main.appendChild(newSection);
+
+      const newDivHeader = document.createElement('div');
+      newDivHeader.classList.add('header');
+
+      newSection.appendChild(newDivHeader);
+
+      const newImg = document.createElement('img');
+      newImg.src = cover;
+      newImg.alt = titleH2;
+
+      newDivHeader.appendChild(newImg);
+
+      const newDivDescription = document.createElement('div');
+      newDivDescription.classList.add('description');
+
+      newDivHeader.appendChild(newDivDescription);
+
+      const newH2 = document.createElement('h2');
+      const contentH2 = document.createTextNode(titleH2);
+      newH2.appendChild(contentH2);
+
+      const newParagraph = document.createElement('p');
+      const contentParagraph = document.createTextNode(artist);
+
+      newParagraph.appendChild(contentParagraph);
+
+      newDivDescription.appendChild(newH2);
+      newDivDescription.appendChild(newParagraph);
+
+      const newUL = document.createElement('ul');
+      newUL.classList.add('list');
+      newUL.setAttribute('id', `list${albumIndex}`);
+      newSection.appendChild(newUL);
+    }
 
     function createListMusics(
-      list: HTMLDListElement,
       title: string,
       index: number,
       albumIndex: number
     ) {
-      const newItem = document.createElement('li');
-      const content = document.createTextNode(`0${index + 1} - ${title}`);
-      newItem.setAttribute('id', `${albumIndex}${index}`);
-      newItem.appendChild(content);
-      list.appendChild(newItem);
+      const ul = document.getElementById(`list${albumIndex}`)!;
+
+      const newLi = document.createElement('li');
+
+      const contentLi = document.createTextNode(`0${index + 1} - ${title}`);
+
+      newLi.setAttribute('id', `${albumIndex}${index}`);
+      newLi.appendChild(contentLi);
+      ul.appendChild(newLi);
     }
   });
-
-  return html`
-    <!-- first album -->
-    <section class="albums">
-      <!-- header -->
-      <div class="header">
-        <img src="./img/beethoven.png" alt="Beethoven" id="img" />
-        <div class="description">
-          <h2>Symphony Collection</h2>
-          <p>Ludwig van Beethoven</p>
-        </div>
-      </div>
-      <!--end header -->
-
-      <ul class="list" id="listBeethoven"></ul>
-    </section>
-    <!-- end first album -->
-    <!-- second album -->
-
-    <section class="albums">
-      <!-- header -->
-      <div class="header">
-        <img src="./img/chopin.png" alt="Beethoven" />
-        <div class="description">
-          <h2>Preludes Collection</h2>
-          <p>Frédéric Chopin</p>
-        </div>
-      </div>
-      <!--end header -->
-
-      <ul class="list" id="listPrelude"></ul>
-    </section>
-    <!-- end second album -->
-  `;
 }
