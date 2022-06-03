@@ -17,47 +17,66 @@ export function Controllers() {
     $ControlTime(audioElement, seekbar);
 
     const $player = new Player();
-
     albums.forEach((album) => {
       $player.playlist.addAlbum(album);
     });
-
-    let validation = 0;
     let currentElement;
     let element: HTMLElement;
     let itemAdded = false;
+
+    getStatus();
+
     // FUNCTIONS
+
+    function getStatus() {
+      const savedStatus = localStorage.getItem('savedStatus');
+      if (savedStatus === 'true') {
+        const $isPlaying = localStorage.getItem('isPlaying');
+        const $albumIndex = localStorage.getItem('albumIndex');
+        const $trackIndex = localStorage.getItem('trackIndex');
+        const $trackURL = localStorage.getItem('trackURL');
+        if ($isPlaying === 'true') {
+          $player.playing = true;
+          $player._albumIndex = Number($albumIndex);
+          $player._trackIndex = Number($trackIndex);
+          $player.trackUrl = $trackURL;
+          setSong();
+        } else {
+          $player.playing = false;
+          $player._albumIndex = Number($albumIndex);
+          $player._trackIndex = Number($trackIndex);
+          setClassSelected(
+            $player._albumIndex.toString(),
+            $player._trackIndex.toString()
+          );
+        }
+      }
+    }
 
     playElement.addEventListener('click', () => {
       if ($player.playing) {
         $player.pause();
-        audioElement.pause();
       } else {
         $player.play();
-        audioElement.play();
       }
-      if (validation === 0) {
-        setSong();
-      }
-      validation++;
+      setSong();
     });
 
     previousElement.addEventListener('click', () => {
       $player.prevTrack();
       $player.play();
+
       setSong();
-      audioElement.play();
     });
 
     nextElement.addEventListener('click', () => {
       nextTrack();
+      setSong();
     });
 
     function nextTrack() {
       $player.nextTrack();
       $player.play();
-      setSong();
-      audioElement.play();
     }
 
     function setSong() {
@@ -67,6 +86,12 @@ export function Controllers() {
       }
       audioElement.src = $player.trackUrl;
 
+      if ($player.playing) {
+        audioElement.play();
+      } else {
+        audioElement.pause();
+      }
+
       if (itemAdded) {
         removeClassSelected();
       }
@@ -74,6 +99,12 @@ export function Controllers() {
       setClassSelected(
         $player._albumIndex.toString(),
         $player._trackIndex.toString()
+      );
+      savingStatus(
+        $player._albumIndex.toString(),
+        $player._trackIndex.toString(),
+        $player.playing.toString(),
+        $player.trackUrl
       );
     }
 
@@ -90,6 +121,19 @@ export function Controllers() {
     function removeClassSelected() {
       element = document.querySelector('.selected')!;
       element.classList.remove('selected');
+    }
+    function savingStatus(
+      albumIndex: string,
+      trackIndex: string,
+      isPlaying: string,
+      trackURL: string
+    ) {
+      localStorage.setItem('albumIndex', albumIndex);
+      localStorage.setItem('trackIndex', trackIndex);
+      localStorage.setItem('isPlaying', isPlaying);
+      localStorage.setItem('trackURL', trackURL);
+      localStorage.setItem('trackURL', trackURL);
+      localStorage.setItem('savedStatus', 'true');
     }
   });
   return html`<section class="controller">

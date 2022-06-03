@@ -19,10 +19,20 @@ function $ControlTime(
 ) {
   mounted(function () {
     $ControlVolume(audioElement);
+
     const currentDurantion = document.querySelector('#currentDurantion')!;
     const totalDurantion = document.querySelector('#totalDurantion')!;
 
     // FUNCTIONS
+    getStatus();
+    function getStatus() {
+      const savedStatus = localStorage.getItem('savedStatus');
+      if (savedStatus === 'true') {
+        const $currentTime = localStorage.getItem('currentTime')!;
+        setSeek(Number($currentTime));
+        timeupdate();
+      }
+    }
 
     function setSeek(value: number) {
       audioElement.currentTime = value;
@@ -37,6 +47,7 @@ function $ControlTime(
     function timeupdate() {
       currentDurantion.innerHTML = secondesToMinutes(audioElement.currentTime);
       seekBar.value = audioElement.currentTime.toString();
+      savingStatus(audioElement.currentTime.toString());
     }
     audioElement.onloadeddata = () => {
       seekBar.max = audioElement.duration.toString();
@@ -45,5 +56,8 @@ function $ControlTime(
     audioElement.addEventListener('timeupdate', () => {
       timeupdate();
     });
+    function savingStatus(currentTime: string) {
+      localStorage.setItem('currentTime', currentTime);
+    }
   });
 }
