@@ -12,6 +12,8 @@ export function Controllers() {
     const previousElement = document.querySelector('#previous')!;
     const nextElement = document.querySelector('#next')!;
     const seekbar = document.querySelector<HTMLInputElement>('#seekbar')!;
+    const imgPlayPause =
+      document.querySelector<HTMLImageElement>('#playPause')!;
 
     // PASSING THE PARAMETERS TO THE CHILD COMPONENT
     $ControlTime(audioElement, seekbar);
@@ -41,6 +43,7 @@ export function Controllers() {
           $player._trackIndex = Number($trackIndex);
           $player.trackUrl = $trackURL;
           setSong();
+          imgPlayPause.src = './img/pause.svg';
         } else {
           $player.playing = false;
           $player._albumIndex = Number($albumIndex);
@@ -49,6 +52,7 @@ export function Controllers() {
             $player._albumIndex.toString(),
             $player._trackIndex.toString()
           );
+          imgPlayPause.src = './img/play.svg';
         }
       }
     }
@@ -56,8 +60,10 @@ export function Controllers() {
     playElement.addEventListener('click', () => {
       if ($player.playing) {
         $player.pause();
+        imgPlayPause.src = './img/play.svg';
       } else {
         $player.play();
+        imgPlayPause.src = './img/pause.svg';
       }
       setSong();
     });
