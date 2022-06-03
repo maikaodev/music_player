@@ -18,17 +18,18 @@ function $ControlVolume(audioElement: HTMLAudioElement) {
 
     // FUNCTIONS
     getStatus();
-    setVolume(50);
+
     function getStatus() {
       const savedStatus = localStorage.getItem('savedStatus');
       if (savedStatus === 'true') {
         const $isMuted = localStorage.getItem('isMuted');
         const $volume = localStorage.getItem('volume')!;
         if ($isMuted === 'true') {
+          setVolume(Number($volume));
           audioElement.muted = true;
           volumeControl.value = $volume;
-          setVolume(Number($volume));
-        } else if ($isMuted === null) {
+          mute.src = './img/volume-mute.svg';
+        } else if ($isMuted === 'false') {
           audioElement.muted = false;
           setVolume(Number($volume));
           volumeControl.value = $volume;
@@ -38,6 +39,7 @@ function $ControlVolume(audioElement: HTMLAudioElement) {
 
     mute.addEventListener('click', () => {
       audioElement.muted = !audioElement.muted;
+      savingStatus(volumeControl.value, audioElement.muted.toString());
 
       mute.src = audioElement.muted
         ? './img/volume-mute.svg'
@@ -46,6 +48,7 @@ function $ControlVolume(audioElement: HTMLAudioElement) {
 
     function setVolume(value: number) {
       audioElement.volume = value / 100;
+
       if (audioElement.volume === 0) {
         mute.src = './img/volume-mute.svg';
         audioElement.muted = true;
