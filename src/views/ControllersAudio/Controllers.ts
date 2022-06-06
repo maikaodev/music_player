@@ -141,6 +141,20 @@ export function Controllers() {
       localStorage.setItem('trackURL', trackURL);
       localStorage.setItem('savedStatus', 'true');
     }
+    let id: string;
+    let arr;
+    window.addEventListener('click', (e) => {
+      if ((e.target as HTMLDListElement).id) {
+        id = (<HTMLDListElement>e.target).id;
+        arr = Array.from(id);
+        $player._albumIndex = Number(arr[0]);
+        $player._trackIndex = Number(arr[1]);
+        $player.play();
+        setSong();
+      } else {
+        return;
+      }
+    });
   });
   return html`<section class="controller">
     ${ControlTimeHTML()}
