@@ -25,8 +25,8 @@ export function Controllers() {
     let currentElement;
     let element: HTMLElement;
     let itemAdded = false;
-    let id: string;
-    let arr;
+    let getTrackIndex: string;
+    let getAlbumIndex: string;
     getStatus();
 
     // FUNCTIONS
@@ -144,11 +144,12 @@ export function Controllers() {
     }
 
     window.addEventListener('click', (e) => {
-      if ((<HTMLElement>e.target).localName === 'li') {
-        id = (<HTMLElement>e.target).id;
-        arr = Array.from(id);
-        $player._albumIndex = Number(arr[0]);
-        $player._trackIndex = Number(arr[1]);
+      if ((e.target as HTMLElement).className === 'song') {
+        getTrackIndex = (<HTMLElement>e.target).attributes[0].value;
+        getAlbumIndex = (<HTMLElement>e.target).parentElement!.attributes[2]
+          .value;
+        $player._albumIndex = Number(getAlbumIndex);
+        $player._trackIndex = Number(getTrackIndex);
         $player.play();
         setSong();
       } else {
