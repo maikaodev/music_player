@@ -10,10 +10,33 @@
   background-color:#E5E5E5;
   
   width: 375px;
-  height:100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+
 
   margin: 0 auto;
+}
+
+@media (min-width:767px){
+  .container{
+    width: 80%;
+  }
+  .controller{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .controller div{
+    width: 420px;
+  }
+  #audioTime div{
+    margin-left: 16px;
+  }
+}
+
+@media (min-width:1023px){
+  .controller div{
+    width: 620px;
+  }
+  #audioTime input{
+    width: 4000px;
+  }
 }
