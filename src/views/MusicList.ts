@@ -73,6 +73,7 @@ export function MusicList() {
       const newUL = document.createElement('ul');
       newUL.classList.add('list');
       newUL.setAttribute('id', `list${albumIndex}`);
+      newUL.setAttribute('index', `${albumIndex}`);
       newSection.appendChild(newUL);
     }
 
@@ -84,6 +85,8 @@ export function MusicList() {
       const ul = document.getElementById(`list${albumIndex}`)!;
 
       const newLi = document.createElement('li');
+      newLi.setAttribute('index', `${index}`);
+      newLi.classList.add('song');
 
       const contentLi = document.createTextNode(`0${index + 1} - ${title}`);
 

@@ -25,7 +25,8 @@ export function Controllers() {
     let currentElement;
     let element: HTMLElement;
     let itemAdded = false;
-
+    let getTrackIndex: string;
+    let getAlbumIndex: string;
     getStatus();
 
     // FUNCTIONS
@@ -141,14 +142,14 @@ export function Controllers() {
       localStorage.setItem('trackURL', trackURL);
       localStorage.setItem('savedStatus', 'true');
     }
-    let id: string;
-    let arr;
+
     window.addEventListener('click', (e) => {
-      if ((e.target as HTMLDListElement).id) {
-        id = (<HTMLDListElement>e.target).id;
-        arr = Array.from(id);
-        $player._albumIndex = Number(arr[0]);
-        $player._trackIndex = Number(arr[1]);
+      if ((e.target as HTMLElement).className === 'song') {
+        getTrackIndex = (<HTMLElement>e.target).attributes[0].value;
+        getAlbumIndex = (<HTMLElement>e.target).parentElement!.attributes[2]
+          .value;
+        $player._albumIndex = Number(getAlbumIndex);
+        $player._trackIndex = Number(getTrackIndex);
         $player.play();
         setSong();
       } else {
