@@ -77,12 +77,12 @@ export function Controllers() {
 
     nextElement.addEventListener('click', () => {
       nextTrack();
-      setSong();
     });
 
     function nextTrack() {
       $player.nextTrack();
       $player.play();
+      setSong();
     }
 
     function setSong() {
