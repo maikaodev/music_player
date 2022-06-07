@@ -25,8 +25,6 @@ export function Controllers() {
     let currentElement;
     let element: HTMLElement;
     let itemAdded = false;
-    let getTrackIndex: string;
-    let getAlbumIndex: string;
     getStatus();
 
     // FUNCTIONS
@@ -144,12 +142,11 @@ export function Controllers() {
     }
 
     window.addEventListener('click', (e) => {
-      if ((e.target as HTMLElement).className === 'song') {
-        getTrackIndex = (<HTMLElement>e.target).attributes[0].value;
-        getAlbumIndex = (<HTMLElement>e.target).parentElement!.attributes[2]
-          .value;
-        $player._albumIndex = Number(getAlbumIndex);
-        $player._trackIndex = Number(getTrackIndex);
+      let $element = e.target as HTMLElement;
+
+      if ($element.getAttribute('data-name') === 'song') {
+        $player._albumIndex = Number($element.getAttribute('data-album-index'));
+        $player._trackIndex = Number($element.getAttribute('data-track-index'));
         $player.play();
         setSong();
       } else {
