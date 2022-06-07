@@ -86,11 +86,14 @@ export function MusicList() {
 
       const newLi = document.createElement('li');
       newLi.setAttribute('index', `${index}`);
-      newLi.classList.add('song');
 
       const contentLi = document.createTextNode(`0${index + 1} - ${title}`);
 
       newLi.setAttribute('id', `${albumIndex}${index}`);
+      newLi.setAttribute('data-name', 'song');
+      newLi.setAttribute('data-album-index', `${albumIndex}`);
+      newLi.setAttribute('data-track-index', `${index}`);
+
       newLi.appendChild(contentLi);
       ul.appendChild(newLi);
     }
