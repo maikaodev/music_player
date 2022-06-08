@@ -1,18 +1,19 @@
 
 main{
   padding: 12px;
+  height: 70vh;
+  overflow:auto;
 }
 
 .albums{
   background-color: #ffffff;
 
   border: 1px solid rgba(0, 0, 0, 0.25);
-                  
   border-radius: 4px;
-}
-.albums{
+                  
   margin-bottom: 16px;
 }
+
 .header{
   display: flex;
   padding: 16px;
