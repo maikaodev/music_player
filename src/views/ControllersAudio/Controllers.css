@@ -1,7 +1,4 @@
 
-footer{
-  height:30vh
-}
 #volume, #audioTime{
   display: flex;
 }
@@ -23,7 +20,6 @@ footer{
   border-top: 2px solid rgba(0, 0, 0, 0.25);
   padding: 8px;
 
-  height: 100%;
 
   justify-content: center;
 }
