@@ -1,7 +1,6 @@
 
 main{
   padding: 12px;
-  height: 70vh;
   overflow:auto;
 }
 
@@ -41,4 +40,8 @@ main{
 }
 .selected{
   background: rgba(0, 0, 0, 0.15);
+}
+
+li, #mute, button{
+  cursor: pointer;
 }
