@@ -42,3 +42,7 @@ main{
 .selected{
   background: rgba(0, 0, 0, 0.15);
 }
+
+li, #mute, button{
+  cursor: pointer;
+}
