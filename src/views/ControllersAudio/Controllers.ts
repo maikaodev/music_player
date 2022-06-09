@@ -6,7 +6,7 @@ import albums from '~/mocks/albums.json';
 
 export function Controllers() {
   mounted(function () {
-    // PICKING UP ELEMENTS
+    //  PICKING UP ELEMENTS
     const audioElement = document.querySelector<HTMLAudioElement>('#audio')!;
     const playElement = document.querySelector('#play')!;
     const previousElement = document.querySelector('#previous')!;
@@ -22,32 +22,32 @@ export function Controllers() {
     albums.forEach((album) => {
       $player.playlist.addAlbum(album);
     });
+
     let currentElement;
     let element: HTMLElement;
     let itemAdded = false;
+    let addSong: boolean = true;
+    let getAlbumIndex: number;
+    let getTrackIndex: number;
+
     getStatus();
 
     // FUNCTIONS
 
     function getStatus() {
       const savedStatus = localStorage.getItem('savedStatus');
+
       if (savedStatus === 'true') {
-        const $isPlaying = localStorage.getItem('isPlaying');
         const $albumIndex = localStorage.getItem('albumIndex');
         const $trackIndex = localStorage.getItem('trackIndex');
-        if ($isPlaying === 'true') {
-          $player.playing = true;
-          $player._albumIndex = Number($albumIndex);
-          $player._trackIndex = Number($trackIndex);
-          $player.play();
-          setSong();
-        } else {
-          $player._albumIndex = Number($albumIndex);
-          $player._trackIndex = Number($trackIndex);
-          $player.play();
-          $player.playing = false;
-          setSong();
-        }
+
+        $player._albumIndex = Number($albumIndex);
+        $player._trackIndex = Number($trackIndex);
+        $player.pause();
+        setClassSelected(
+          $player._albumIndex.toString(),
+          $player._trackIndex.toString()
+        );
       }
     }
 
@@ -63,6 +63,7 @@ export function Controllers() {
     previousElement.addEventListener('click', () => {
       $player.prevTrack();
       $player.play();
+      addSong = true;
       setSong();
     });
 
@@ -73,22 +74,26 @@ export function Controllers() {
     function nextTrack() {
       $player.nextTrack();
       $player.play();
+      addSong = true;
       setSong();
     }
 
     function setSong() {
-      if (!$player.trackUrl) {
-        alert('Faixa não encontrada!');
-        return;
+      if (addSong) {
+        if ($player.trackUrl) {
+          audioElement.src = $player.trackUrl;
+        } else {
+          alert('Faixa não encontrada!');
+          return;
+        }
       }
-      audioElement.src = $player.trackUrl;
 
       if ($player.playing) {
-        audioElement.play();
         imgPlayPause.src = './img/pause.svg';
+        audioElement.play();
       } else {
-        audioElement.pause();
         imgPlayPause.src = './img/play.svg';
+        audioElement.pause();
       }
 
       if (itemAdded) {
@@ -99,11 +104,13 @@ export function Controllers() {
         $player._albumIndex.toString(),
         $player._trackIndex.toString()
       );
+
       savingStatus(
         $player._albumIndex.toString(),
-        $player._trackIndex.toString(),
-        $player.playing.toString()
+        $player._trackIndex.toString()
       );
+
+      addSong = false;
     }
 
     audioElement.addEventListener('ended', () => {
@@ -113,6 +120,7 @@ export function Controllers() {
       ) {
         $player._albumIndex = 0;
         $player._trackIndex = 0;
+        addSong = true;
         $player.pause();
         setSong();
       } else {
@@ -130,31 +138,34 @@ export function Controllers() {
       element = document.querySelector('.selected')!;
       element.classList.remove('selected');
     }
-    function savingStatus(
-      albumIndex: string,
-      trackIndex: string,
-      isPlaying: string
-    ) {
+    function savingStatus(albumIndex: string, trackIndex: string) {
       localStorage.setItem('albumIndex', albumIndex);
       localStorage.setItem('trackIndex', trackIndex);
-      localStorage.setItem('isPlaying', isPlaying);
       localStorage.setItem('savedStatus', 'true');
     }
 
     window.addEventListener('click', (e) => {
       let $element = e.target as HTMLElement;
+      getAlbumIndex = Number($element.getAttribute('data-album-index'));
+      getTrackIndex = Number($element.getAttribute('data-track-index'));
 
-      if ($element.getAttribute('data-name') === 'song') {
-        $player._albumIndex = Number($element.getAttribute('data-album-index'));
-        $player._trackIndex = Number($element.getAttribute('data-track-index'));
+      if (
+        getAlbumIndex === $player._albumIndex &&
+        getTrackIndex === $player._trackIndex
+      ) {
+        return;
+      } else if ($element.getAttribute('data-name') === 'song') {
+        $player._albumIndex = getAlbumIndex;
+        $player._trackIndex = getTrackIndex;
         $player.play();
+        addSong = true;
         setSong();
       }
     });
   });
   return html`<section class="controller">
     ${ControlTimeHTML()}
-    <audio src="" id="audio"></audio>
+    <audio id="audio"></audio>
 
     <div>
       <ul class="list">
