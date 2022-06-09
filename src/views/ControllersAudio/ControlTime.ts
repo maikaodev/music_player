@@ -24,11 +24,18 @@ function $ControlTime(
     const totalDurantion = document.querySelector('#totalDurantion')!;
 
     // FUNCTIONS
-    getStatus();
-    function getStatus() {
+    getStatusTime();
+    function getStatusTime() {
       const savedStatus = localStorage.getItem('savedStatus');
       if (savedStatus === 'true') {
         const $currentTime = localStorage.getItem('currentTime')!;
+        const $totalDuration = localStorage.getItem('totalDuration')!;
+
+        //Pegando o Tempo Final primeiro para definir o Tempo Atual
+        seekBar.max = $totalDuration;
+        totalDurantion.innerHTML = secondesToMinutes(Number($totalDuration));
+
+        //Tempo Atual
         setSeek(Number($currentTime));
         timeupdate();
       }
@@ -47,17 +54,25 @@ function $ControlTime(
     function timeupdate() {
       currentDurantion.innerHTML = secondesToMinutes(audioElement.currentTime);
       seekBar.value = audioElement.currentTime.toString();
-      savingStatus(audioElement.currentTime.toString());
+      savingCurrentTime(audioElement.currentTime.toString());
     }
+
     audioElement.onloadeddata = () => {
       seekBar.max = audioElement.duration.toString();
       totalDurantion.innerHTML = secondesToMinutes(audioElement.duration);
+      savingTotalDuration(audioElement.duration.toString());
     };
+
     audioElement.addEventListener('timeupdate', () => {
       timeupdate();
     });
-    function savingStatus(currentTime: string) {
+
+    function savingCurrentTime(currentTime: string) {
       localStorage.setItem('currentTime', currentTime);
+    }
+
+    function savingTotalDuration(totalDuration: string) {
+      localStorage.setItem('totalDuration', totalDuration);
     }
   });
 }
