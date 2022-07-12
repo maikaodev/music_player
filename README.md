@@ -2,7 +2,7 @@
 
 ## LINK - Deploy
 
-https://clone-github-maikaodev.netlify.app/
+https://maikadev-musicplayer.netlify.app/
 
 ## LinkedIn
 
@@ -10,7 +10,7 @@ https://www.linkedin.com/in/maikaodev/
 
 ## Descrição
 
-- Projeto criado a partir de um test de uma empresa. 
+- Projeto criado a partir de um teste para uma empresa. 
 
 ## Aprendizados
 
