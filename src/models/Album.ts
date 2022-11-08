@@ -1,14 +1,17 @@
 export class Album implements AlbumType {
-  constructor(data: AlbumData) {
-    this.artist = data.artist;
-    this.cover = data.cover;
-    this.title = data.title;
-    this.tracks = data.tracks;
-  }
+  //
   artist: string;
   cover: string;
   title: string;
   tracks: TrackData[];
+
+  constructor({ artist, cover, title, tracks }: AlbumData) {
+    this.artist = artist;
+    this.cover = cover;
+    this.title = title;
+    this.tracks = tracks;
+  }
+
   getUrlFromIndex(index: number): string | null {
     if (index === 0 || index <= this.tracks.length - 1) {
       return this.tracks[index].url;

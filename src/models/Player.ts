@@ -2,21 +2,31 @@ import { Playlist } from './Playlist';
 import albums from '~/mocks/albums.json';
 
 export class Player implements PlayerType {
-  album: AlbumType | null = null;
-  playing: boolean = false;
-  playlist: PlaylistType = new Playlist();
-  trackUrl: string | null = null;
-  _albumIndex: number = 0;
-  _trackIndex: number = 0;
+  //
+  album: AlbumType | null;
+  playing: boolean;
+  playlist: PlaylistType;
+  _albumIndex: number;
+  _trackIndex: number;
+  trackUrl: string | null;
+
+  constructor() {
+    this.album = null;
+    this.playing = false;
+    this.playlist = new Playlist();
+    this._albumIndex = 0;
+    this._trackIndex = 0;
+    this.trackUrl = null;
+  }
+
   get albumIndex() {
     return this._albumIndex;
   }
   set albumIndex(value) {
     if (value <= albums.length - 1) {
       this._albumIndex = value;
-    } else {
-      return;
     }
+    return;
   }
   get trackIndex() {
     return this._trackIndex;
@@ -24,9 +34,8 @@ export class Player implements PlayerType {
   set trackIndex(value) {
     if (value <= this.playlist.albums[this._albumIndex].tracks.length - 1) {
       this._trackIndex = value;
-    } else {
-      return;
     }
+    return;
   }
   play(): void {
     this.playing = true;
@@ -39,27 +48,33 @@ export class Player implements PlayerType {
   nextTrack(): void {
     if (!this.playlist.albums[this._albumIndex].isLastTrack(this._trackIndex)) {
       this._trackIndex++;
-    } else if (
+      return;
+    }
+    if (
       this.playlist.albums[this._albumIndex].isLastTrack(this._trackIndex) &&
       this.playlist.isLastAlbum(this._albumIndex)
     ) {
       this._albumIndex = 0;
       this._trackIndex = 0;
-    } else {
-      this._albumIndex++;
-      this._trackIndex = 0;
+      return;
     }
+    this._albumIndex++;
+    this._trackIndex = 0;
   }
   prevTrack(): void {
     if (
       !this.playlist.albums[this._albumIndex].isFirstTrack(this._trackIndex)
     ) {
       this._trackIndex--;
-    } else if (!this.playlist.isFirstAlbum(this._albumIndex)) {
+      return;
+    }
+    if (!this.playlist.isFirstAlbum(this._albumIndex)) {
       this._albumIndex--;
       this._trackIndex =
         this.playlist.albums[this._albumIndex].tracks.length - 1;
-    } else if (
+      return;
+    }
+    if (
       this.playlist.isFirstAlbum(this._albumIndex) &&
       this.playlist.albums[this._albumIndex].isFirstTrack(this.trackIndex)
     ) {
